@@ -1432,6 +1432,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"eventsource-parser@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "eventsource-parser@npm:1.0.0"
+  checksum: 1bcef98c6e35e5afe6bdbcd6985187d26f3e706f7283a9a8e114491322a2a3be6fb75298ad8426bd5f7ca3de99a632417e8b60d14cc9bc3f4b6aebc03a81c00d
+  languageName: node
+  linkType: hard
+
 "execa@npm:6.1.0":
   version: 6.1.0
   resolution: "execa@npm:6.1.0"
@@ -2598,6 +2605,7 @@ __metadata:
   dependencies:
     "@types/node": ^18.15.11
     axios: ^0.27.2
+    eventsource-parser: ^1.0.0
     konfig-release-it: ^15.5.1
     typescript: ^5.0.3
     vite: ^2.8.0

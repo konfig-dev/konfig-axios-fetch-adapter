@@ -69,7 +69,7 @@ async function getResponse(
         data = await stageOne.json();
         break;
       case "stream":
-        data = await stageOne.body?.getReader().read();
+        data = stageOne.body.getReader();
         break;
       default:
         data = await stageOne.text();

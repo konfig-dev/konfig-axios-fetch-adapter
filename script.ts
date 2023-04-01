@@ -1,5 +1,6 @@
 import axios from "axios";
 import fetchAdapter from "./index";
+import { createParser, EventSourceParseCallback } from "eventsource-parser";
 
 window["axios"] = axios;
 window.onload = async function () {
@@ -69,9 +70,52 @@ if (chatForm && chatInput && chatInput instanceof HTMLInputElement) {
           Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
         },
         adapter: fetchAdapter,
+        responseType: "stream",
       }
     );
 
-    console.log(res.data);
+    const decoder = new TextDecoder();
+    const stream = new ReadableStream({
+      async start(controller) {
+        const encoder = new TextEncoder();
+        const onParse: EventSourceParseCallback = (event) => {
+          if (event.type === "event") {
+            const data = event.data;
+
+            if (data === "[DONE]") {
+              controller.close();
+              return;
+            }
+
+            try {
+              const json = JSON.parse(data);
+              const text = json.choices[0].delta.content;
+              const queue = encoder.encode(text);
+              controller.enqueue(queue);
+            } catch (e) {
+              controller.error(e);
+            }
+          }
+        };
+
+        const parser = createParser(onParse);
+
+        const reader = res.data;
+        let done = false;
+        while (!done) {
+          const { value: chunk, done: doneReading } = await reader.read();
+          done = doneReading;
+          parser.feed(decoder.decode(chunk));
+        }
+      },
+    });
+
+    const reader = stream.getReader();
+    let done = false;
+    while (!done) {
+      const { value, done: doneReading } = await reader.read();
+      done = doneReading;
+      console.log(decoder.decode(value));
+    }
   };
 }
