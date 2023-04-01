@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "yarn tsc",
-    "release": "release-it",
+    "release": "konfig-release-it",
     "test": "echo done",
     "dev": "vite"
   },
@@ -44,5 +44,6 @@
   },
   "peerDependencies": {
     "axios": ">=0.26.0"
-  }
+  },
+  "packageManager": "yarn@3.5.0"
 }
