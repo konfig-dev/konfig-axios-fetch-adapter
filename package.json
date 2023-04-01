@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "yarn tsc",
-    "release": "np",
+    "release": "yarn tsc && np",
     "test": "echo done",
     "dev": "vite"
   },
