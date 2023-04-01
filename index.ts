@@ -1,4 +1,4 @@
-import axios, {
+import {
   AxiosAdapter,
   AxiosError,
   AxiosRequestConfig,
@@ -36,10 +36,7 @@ const fetchAdapter: AxiosAdapter = async (config) => {
     if (data instanceof Error) {
       reject(data);
     } else {
-      Object.prototype.toString.call((config as any).settle) ===
-      "[object Function]"
-        ? (config as any).settle(resolve, reject, data)
-        : settle(resolve, reject, data);
+      settle(resolve, reject, data);
     }
   });
 };
@@ -48,7 +45,10 @@ const fetchAdapter: AxiosAdapter = async (config) => {
  * Fetch API stage two is to get response body. This funtion tries to retrieve
  * response body based on response's type
  */
-async function getResponse(request: Request, config: AxiosRequestConfig) {
+async function getResponse(
+  request: Request,
+  config: AxiosRequestConfig
+): Promise<AxiosResponse | Error> {
   let stageOne: Response;
   try {
     stageOne = await fetch(request);
@@ -67,6 +67,9 @@ async function getResponse(request: Request, config: AxiosRequestConfig) {
         break;
       case "json":
         data = await stageOne.json();
+        break;
+      case "stream":
+        data = await stageOne.body?.getReader().read();
         break;
       default:
         data = await stageOne.text();
