@@ -9,7 +9,7 @@
   ],
   "scripts": {
     "build": "yarn tsc",
-    "release": "yarn tsc && np",
+    "release": "release-it",
     "test": "echo done",
     "dev": "vite"
   },
@@ -29,10 +29,18 @@
   },
   "homepage": "https://github.com/konfig-dev/konfig-axios-fetch-adapter#readme",
   "devDependencies": {
+    "@types/node": "^18.15.11",
     "axios": "^0.27.2",
-    "np": "^7.6.1",
+    "release-it": "^15.10.0",
     "typescript": "^5.0.3",
     "vite": "^2.8.0"
+  },
+  "release-it": {
+    "hooks": {
+      "before:init": [
+        "yarn build"
+      ]
+    }
   },
   "peerDependencies": {
     "axios": ">=0.26.0"

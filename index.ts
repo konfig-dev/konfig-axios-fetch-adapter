@@ -78,7 +78,7 @@ async function getResponse(request: Request, config: AxiosRequestConfig) {
     data,
     status: stageOne.status,
     statusText: stageOne.statusText,
-    headers: Object.fromEntries(stageOne.headers.entries()), // Make a copy of headers
+    headers: Object.fromEntries(Object.entries(stageOne.headers)), // Make a copy of headers
     config: config,
     request,
   };
