@@ -10,6 +10,7 @@
   "scripts": {
     "build": "yarn tsc",
     "release": "konfig-release-it",
+    "release-ci": "konfig-release-it --ci",
     "test": "echo done",
     "dev": "vite"
   },
