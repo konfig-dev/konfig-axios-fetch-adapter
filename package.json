@@ -22,12 +22,12 @@
     "adapter",
     "fetch"
   ],
-  "author": "nta.toan@gmail.com",
+  "author": "engineering@konfigthis.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vespaiach/axios-fetch-adapter/issues"
+    "url": "https://github.com/konfig-dev/konfig-axios-fetch-adapter/issues"
   },
-  "homepage": "https://github.com/vespaiach/axios-fetch-adapter#readme",
+  "homepage": "https://github.com/konfig-dev/konfig-axios-fetch-adapter#readme",
   "devDependencies": {
     "axios": "^0.27.2",
     "np": "^7.6.1",
