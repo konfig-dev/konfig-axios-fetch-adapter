@@ -100,7 +100,7 @@ if (chatForm && chatInput && chatInput instanceof HTMLInputElement) {
 
         const parser = createParser(onParse);
 
-        const reader = res.data;
+        const reader = res.data.getReader();
         let done = false;
         while (!done) {
           const { value: chunk, done: doneReading } = await reader.read();
