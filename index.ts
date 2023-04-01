@@ -48,7 +48,7 @@ const fetchAdapter: AxiosAdapter = async (config) => {
  * Fetch API stage two is to get response body. This funtion tries to retrieve
  * response body based on response's type
  */
-async function getResponse(request, config) {
+async function getResponse(request: Request, config: AxiosRequestConfig) {
   let stageOne: Response;
   try {
     stageOne = await fetch(request);
@@ -67,9 +67,6 @@ async function getResponse(request, config) {
         break;
       case "json":
         data = await stageOne.json();
-        break;
-      case "formData":
-        data = await stageOne.formData();
         break;
       default:
         data = await stageOne.text();
