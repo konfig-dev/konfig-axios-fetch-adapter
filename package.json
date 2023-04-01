@@ -2,10 +2,10 @@
   "name": "konfig-axios-fetch-adapter",
   "version": "0.3.1",
   "description": "Fetch adapter for axios written in TypeScript",
-  "main": "index.js",
-  "module": "index.js",
-  "types": "index.d.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "build": "yarn tsc",
     "release": "np",
     "test": "echo done",
     "dev": "vite"
@@ -28,6 +28,7 @@
   "devDependencies": {
     "axios": "^0.27.2",
     "np": "^7.6.1",
+    "typescript": "^5.0.3",
     "vite": "^2.8.0"
   },
   "peerDependencies": {
