@@ -12,7 +12,8 @@
     "release": "konfig-release-it",
     "release-ci": "konfig-release-it --ci",
     "test": "echo done",
-    "dev": "vite"
+    "vite": "vite",
+    "dev": "sh dev.sh"
   },
   "repository": {
     "type": "git",
