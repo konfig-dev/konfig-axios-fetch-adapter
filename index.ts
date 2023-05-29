@@ -4,10 +4,10 @@ import {
   AxiosRequestConfig,
   AxiosResponse,
 } from "axios";
-import settle from "axios/lib/core/settle";
-import buildURL from "axios/lib/helpers/buildURL";
-import buildFullPath from "axios/lib/core/buildFullPath";
-import { isUndefined, isStandardBrowserEnv, isFormData } from "axios/lib/utils";
+import settle from "./settle";
+import buildURL from "./helpers/buildURL";
+import buildFullPath from "./core/buildFullPath";
+import { isUndefined, isStandardBrowserEnv, isFormData } from "./utils";
 
 /**
  * - Create a request object
