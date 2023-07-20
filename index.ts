@@ -4,9 +4,15 @@ import {
   AxiosRequestConfig,
   AxiosResponse,
 } from "axios";
+import { ReadableStream } from "web-streams-polyfill";
 import settle from "./settle";
 import buildURL from "./helpers/buildURL";
 import buildFullPath from "./core/buildFullPath";
+const SafeHeaders =
+  typeof Headers !== "undefined" ? Headers : require("node-fetch").Headers;
+const SafeRequest =
+  typeof Request !== "undefined" ? Request : require("node-fetch").Request;
+const safeFetch = typeof fetch !== "undefined" ? fetch : require("node-fetch");
 import { isUndefined, isStandardBrowserEnv, isFormData } from "./utils";
 
 /**
@@ -51,8 +57,10 @@ async function getResponse(
 ): Promise<AxiosResponse | Error> {
   let stageOne: Response;
   try {
-    stageOne = await fetch(request);
+    stageOne = await safeFetch(request);
   } catch (e) {
+    if (e instanceof Error)
+      return createError(e.message, config, "ERR_NETWORK", request);
     return createError("Network Error", config, "ERR_NETWORK", request);
   }
 
@@ -69,12 +77,35 @@ async function getResponse(
         data = await stageOne.json();
         break;
       case "stream":
-        data = stageOne.body;
+        // Check if the stream is a NodeJS stream or a browser stream.
+        // @ts-ignore - TS doesn't know about `pipe` on streams.
+        const isNodeJsStream = typeof stageOne.body.pipe === "function";
+        data = isNodeJsStream
+          ? nodeToWebReadableStream(stageOne.body)
+          : stageOne.body;
         break;
       default:
         data = await stageOne.text();
         break;
     }
+  }
+
+  function nodeToWebReadableStream(nodeReadable) {
+    return new ReadableStream({
+      start(controller) {
+        nodeReadable.on("data", (chunk) => {
+          controller.enqueue(chunk);
+        });
+
+        nodeReadable.on("end", () => {
+          controller.close();
+        });
+
+        nodeReadable.on("error", (err) => {
+          controller.error(err);
+        });
+      },
+    });
   }
 
   const response: AxiosResponse<any> = {
@@ -96,14 +127,14 @@ type Writeable<T> = { -readonly [P in keyof T]: T[P] };
  */
 function createRequest(config: AxiosRequestConfig): Request {
   const headers = config.headers
-    ? new Headers(
+    ? new SafeHeaders(
         Object.keys(config.headers).reduce((obj, key) => {
           if (config.headers === undefined) throw Error();
           obj[key] = String(config.headers[key]);
           return obj;
         }, {})
       )
-    : new Headers({});
+    : new SafeHeaders({});
 
   // HTTP basic authentication
   if (config.auth) {
@@ -141,7 +172,7 @@ function createRequest(config: AxiosRequestConfig): Request {
   const url = buildURL(fullPath, config.params, config.paramsSerializer);
 
   // Expected browser to throw error if there is any wrong configuration value
-  return new Request(url, options);
+  return new SafeRequest(url, options);
 }
 
 /**
