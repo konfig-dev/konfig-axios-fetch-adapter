@@ -4,10 +4,13 @@ import {
   AxiosRequestConfig,
   AxiosResponse,
 } from "axios";
-import { ReadableStream } from "web-streams-polyfill";
 import settle from "./settle";
 import buildURL from "./helpers/buildURL";
 import buildFullPath from "./core/buildFullPath";
+const SafeReadableStream =
+  typeof ReadableStream !== "undefined"
+    ? ReadableStream
+    : require("web-streams-polyfill").ReadableStream;
 const SafeHeaders =
   typeof Headers !== "undefined" ? Headers : require("node-fetch").Headers;
 const SafeRequest =
@@ -91,7 +94,7 @@ async function getResponse(
   }
 
   function nodeToWebReadableStream(nodeReadable) {
-    return new ReadableStream({
+    return new SafeReadableStream({
       start(controller) {
         nodeReadable.on("data", (chunk) => {
           controller.enqueue(chunk);
