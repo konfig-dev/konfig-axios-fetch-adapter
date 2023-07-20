@@ -8,10 +8,19 @@ export class AppService {
   async getHello(): Promise<string> {
 
 
-    // axios.create({
+    // const ax = axios.create({
     //   // @ts-ignore
     //   adapter: fetchAdapter
     // })
+    // let res = await ax.request({
+    //   url: "https://httpbin.org/post",
+    //   method: "post",
+    //   data: {"hello": "world"},
+    //   adapter: fetchAdapter as any,
+    // });
+
+    // console.log(res.data);
+
 
 
     const humanloop = new Humanloop({
@@ -23,12 +32,7 @@ export class AppService {
     const response = await humanloop.chatStream({
       project: "konfig-dev-001",
       messages: [
-        {
-          role: "system",
-          content:
-            "You are ChatGPT, a large language model trained by OpenAI. Follow the user's instructions carefully. Respond using markdown.",
-        },
-        { role: "user", content: "Write me a country song" },
+        { role: "user", content: "Hello!" },
       ],
       model_config: {
         model: "gpt-3.5-turbo",
@@ -38,6 +42,7 @@ export class AppService {
     });
 
     const decoder = new TextDecoder();
+
     const reader = response.data.getReader();
     let done = false;
     while (!done) {
@@ -47,5 +52,5 @@ export class AppService {
     }
 
     return 'Hello!';
-  }
+ }
 }
