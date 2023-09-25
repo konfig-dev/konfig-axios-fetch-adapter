@@ -54,7 +54,7 @@
   },
   "packageManager": "yarn@3.5.0",
   "dependencies": {
-    "node-fetch": "2.6.1",
+    "node-fetch": "^2.6.7",
     "web-streams-polyfill": "^3.2.1"
   }
 }
