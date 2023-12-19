@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import axios from "axios";
-import fetchAdapter from "../../../dist/index";
+import fetchAdapter from "../../../../dist/index";
 
 export const config = {
   runtime: "edge",
