@@ -1,0 +1,16 @@
+{
+  "name": "undefined-error",
+  "packageManager": "yarn@3.5.0",
+  "scripts": {
+    "test": "vitest",
+    "start": "ts-node server.ts"
+  },
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "vitest": "^1.0.4"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "humanloop": "portal:../../../../customers/humanloop/humanloop-sdks/v4-alpha/typescript"
+  }
+}
