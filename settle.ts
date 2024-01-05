@@ -2,8 +2,6 @@ import { AxiosError } from "axios";
 
 export default function settle(resolve, reject, response) {
   var validateStatus = response.config.validateStatus;
-  console.log("test");
-  debugger;
   if (!response.status || !validateStatus || validateStatus(response.status)) {
     resolve(response);
   } else {

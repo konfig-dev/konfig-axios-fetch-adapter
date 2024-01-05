@@ -1,8 +1,10 @@
 import {
   AxiosAdapter,
   AxiosError,
+  AxiosHeaders,
   AxiosRequestConfig,
   AxiosResponse,
+  InternalAxiosRequestConfig,
 } from "axios";
 import settle from "./settle";
 import buildURL from "./helpers/buildURL";
@@ -24,6 +26,16 @@ import { isUndefined, isStandardBrowserEnv, isFormData } from "./utils";
  * - Check if timeout
  */
 const fetchAdapter: AxiosAdapter = async (config) => {
+  if (config.headers) {
+    // In axios version >= 1.0.0, a falsy value ("undefined") for Content-Type
+    // is automatically set for some reason This can cause issues if the server
+    // expects Content-Type header to be something meaningful. To avoid this,
+    // we unset Content-Type if it's falsy (e.g. "undefined").
+    if (!config.headers.getContentType()) {
+      config.headers.clear("Content-Type");
+    }
+  }
+
   const request = createRequest(config);
   const promiseChain = [getResponse(request, config)];
 
@@ -56,7 +68,7 @@ const fetchAdapter: AxiosAdapter = async (config) => {
  */
 async function getResponse(
   request: Request,
-  config: AxiosRequestConfig
+  config: InternalAxiosRequestConfig
 ): Promise<AxiosResponse | Error> {
   let stageOne: Response;
   try {
@@ -116,7 +128,7 @@ async function getResponse(
     status: stageOne.status,
     statusText: stageOne.statusText,
     headers: Object.fromEntries(Object.entries(stageOne.headers)), // Make a copy of headers
-    config: config,
+    config: { ...config, headers: new AxiosHeaders(config.headers) },
     request,
   };
 
@@ -197,7 +209,7 @@ function createRequest(config: AxiosRequestConfig): Request {
  */
 function createError(
   message: string,
-  config: AxiosRequestConfig,
+  config: InternalAxiosRequestConfig,
   code: string,
   request: Request,
   response?: AxiosResponse
